@@ -18,6 +18,8 @@ public class Room extends JPanel {
 	
 	private int width;
 	private int height;
+	private final Color CHAIR_COLOR = new Color(150,75,0);
+	private final Color TABLE_COLOR = new Color(53,101,77);
 	private ArrayList<Furniture> furniture = new ArrayList<Furniture>();
 	
 	public Room(int width, int height) {
@@ -45,11 +47,11 @@ public class Room extends JPanel {
 			Location loc = s.getLocation();
 			Graphics2D g2 = (Graphics2D) g;
 			if(s instanceof Table) {
-				g2.setColor(Color.GREEN);
+				g2.setColor(TABLE_COLOR);
 				g2.fillRect(loc.getX(), loc.getY(), s.getWidth(), s.getLength());
 			}
 			else if(s instanceof Chair) {
-				g2.setColor(Color.BLACK);
+				g2.setColor(CHAIR_COLOR);
 				g2.fillOval(loc.getX(), loc.getY(), ((Chair) s).getRadius(), ((Chair) s).getRadius());
 			}
 		}
