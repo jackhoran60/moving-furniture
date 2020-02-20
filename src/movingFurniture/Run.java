@@ -14,12 +14,6 @@ public class Run extends Canvas{
 	
 	
 	public static void main(String[] args) {
-		new Run();
-		
-		
-	}
-	public Run() {
-		
 		JFrame frame = new JFrame("Moving Furniture");
 		JPanel panel = new JPanel();
 		Room room = new Room(800, 800);
@@ -32,11 +26,11 @@ public class Run extends Canvas{
 		
 		
 		Table myTable = new Table(20, 40, 20, 40);
-		
+		Table table2 = new Table(200, 20, 50, 100);
+		Chair myChair = new Chair(30, 200, 30);
 		room.addFurniture(myTable);
-		room.addTable(200, 20, 50, 100);
-		room.addChair(30, 200, 30);
-		
+		room.addFurniture(table2);
+		room.addFurniture(myChair);
 		
 		//just following tutorial here
 		//how do I do OOP with graphics?
@@ -44,12 +38,13 @@ public class Run extends Canvas{
 		
 		frame.add(room);
 		frame.setVisible(true);
-		
-		
+		//		new Run();
 		
 		
 	}
-	public void moveObjects() {
+	public Run() {
+		
+		
 		
 	}
 	

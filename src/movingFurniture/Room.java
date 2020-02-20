@@ -4,6 +4,8 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -41,13 +43,14 @@ public class Room extends JPanel {
 		super.paintComponent(g);
 		for(Furniture s : furniture) {
 			Location loc = s.getLocation();
+			Graphics2D g2 = (Graphics2D) g;
 			if(s instanceof Table) {
-				g.fillRect(loc.getX(), loc.getY(), s.getWidth(), s.getLength());
-				g.setColor(Color.GREEN);
+				g2.setColor(Color.GREEN);
+				g2.fillRect(loc.getX(), loc.getY(), s.getWidth(), s.getLength());
 			}
 			else if(s instanceof Chair) {
-				g.fillOval(loc.getX(), loc.getY(), ((Chair) s).getRadius(), ((Chair) s).getRadius());
-				g.setColor(Color.BLACK);
+				g2.setColor(Color.BLACK);
+				g2.fillOval(loc.getX(), loc.getY(), ((Chair) s).getRadius(), ((Chair) s).getRadius());
 			}
 		}
 	}
