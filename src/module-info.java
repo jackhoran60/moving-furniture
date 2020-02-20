@@ -6,4 +6,5 @@
  *
  */
 module movingFurniture {
+	requires java.desktop;
 }

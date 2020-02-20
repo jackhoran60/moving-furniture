@@ -1,14 +1,16 @@
 package movingFurniture;
 
+import java.awt.Graphics;
+
 public class Chair extends Furniture{
 	private Location location;
-	private double radius;
+	private int radius;
 	
-	Chair(double radius, Location location){
+	Chair(int radius, Location location){
 		this.radius = radius;
 		this.location = location;
 	}
-	Chair(double radius, double x, double y){
+	Chair(int radius, int x, int y){
 		this.radius = radius;
 		Location location = new Location(x,y);
 		this.location = location;
@@ -20,21 +22,21 @@ public class Chair extends Furniture{
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	public void setLocation(double x, double y) {
+	public void setLocation(int x, int y) {
 		Location location = new Location(x,y);
 		this.location = location;
 	}
 
-	public double getRadius() {
+	public int getRadius() {
 		return radius;
 	}
 
-	public void setRadius(double radius) {
+	public void setRadius(int radius) {
 		this.radius = radius;
 	}
 
-	public double distanceFromEdge(Location location) {
-		double dist = this.location.getDistance(location) - radius;
+	public int distanceFromEdge(Location location) {
+		int dist = (int) (this.location.getDistance(location) - radius);
 		return dist;
 	}
 
@@ -43,6 +45,15 @@ public class Chair extends Furniture{
 			return false;
 		}
 		return true;
+	}
+	public void draw(Graphics g) {
+		
+	}
+	public int getWidth() {
+		return 0;
+	}
+	public int getLength() {
+		return 0;
 	}
 
 }

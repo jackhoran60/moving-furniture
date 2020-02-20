@@ -1,5 +1,7 @@
 package movingFurniture;
 
+import java.awt.Graphics;
+
 public abstract class Furniture {
 	private Location location;
 	
@@ -9,6 +11,9 @@ public abstract class Furniture {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	public abstract double distanceFromEdge(Location location);
+	public abstract int distanceFromEdge(Location location);
 	public abstract boolean isTouchingLocation(Location location);
+	public abstract void draw(Graphics g);
+	public abstract int getWidth();
+	public abstract int getLength();
 }

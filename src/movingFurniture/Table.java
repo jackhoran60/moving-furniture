@@ -1,16 +1,22 @@
 package movingFurniture;
 
-public class Table extends Furniture{
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
+
+public class Table extends Furniture {
 	private Location location;
-	private double width;
-	private double length;
+	private int width;
+	private int length;
 	
-	Table(double width, double length, Location location){
+	Table(int width, int length, Location location){
 		this.width = width;
 		this.length = length;
 		this.location = location;
 	}
-	Table(double width, double length, double x, double y){
+	Table(int width, int length, int x, int y){
 		this.width = width;
 		this.length = length;
 		Location location = new Location(x,y);
@@ -23,32 +29,32 @@ public class Table extends Furniture{
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	public void setLocation(double x, double y) {
+	public void setLocation(int x, int y) {
 		Location location = new Location(x,y);
 		this.location = location;
 	}
 
-	public double getWidth() {
+	public int getWidth() {
 		return width;
 	}
 
-	public void setWidth(double width) {
+	public void setWidth(int width) {
 		this.width = width;
 	}
 
-	public double getLength() {
+	public int getLength() {
 		return length;
 	}
 
-	public void setLength(double length) {
+	public void setLength(int length) {
 		this.length = length;
 	}
 
 	@Override
-	public double distanceFromEdge(Location location) {
+	public int distanceFromEdge(Location location) {
 		double xDist = (Math.abs(location.getX()-this.location.getX()) - width) / 2;
 		double yDist = (Math.abs(location.getY()-this.location.getY()) - width) / 2;
-		double dist = Math.pow(xDist, 2) + Math.pow(yDist, 2);
+		int dist = (int) (Math.pow(xDist, 2) + Math.pow(yDist, 2));
 		return dist;
 	}
 
@@ -62,5 +68,11 @@ public class Table extends Furniture{
 		}
 		return true;
 	}
-
+	
+	public void draw(Graphics g) {
+		int x = location.getX();
+		int y = location.getY();
+		g.drawRect(x, y, width, length);
+		
+	}
 }

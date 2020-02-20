@@ -1,32 +1,32 @@
 package movingFurniture;
 
 public class Location {
-	private double x;
-	private double y;
-	Location(double x, double y){
+	private int x;
+	private int y;
+	Location(int x, int y){
 		this.x = x;
 		this.y = y;
 	}
-	public double getX() {
+	public int getX() {
 		return x;
 	}
-	public void setX(double x) {
+	public void setX(int x) {
 		this.x = x;
 	}
-	public double getY() {
+	public int getY() {
 		return y;
 	}
-	public void setY(double y) {
+	public void setY(int y) {
 		this.y = y;
 	}
-	public void setLocation(double x, double y) {
+	public void setLocation(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-	public double getDistance(Location otherLoc) {
+	public int getDistance(Location otherLoc) {
 		double xDist = Math.pow(otherLoc.getX()-x, 2);
 		double yDist = Math.pow(otherLoc.getY()-y, 2);
-		double dist = Math.sqrt(xDist+yDist);
+		int dist = (int) Math.sqrt(xDist+yDist);
 		return dist;
 	}
 }
