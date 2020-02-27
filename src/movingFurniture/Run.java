@@ -13,9 +13,6 @@ import javax.swing.*;
 public class Run extends Canvas{
 	public static void main(String[] args) {
 		conferenceRoom();
-		//git push test comment
-		//this is good!
-		System.out.println("I hope it works!");
 	}
 	
 	public static void conferenceRoom() {
