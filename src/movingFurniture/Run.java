@@ -5,27 +5,81 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
 public class Run extends Canvas{
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("Moving Furniture");
-		JPanel panel = new JPanel();
-		Room room = new Room(800, 800);
-		
-		panel.setMinimumSize( room.getSize() );
-		frame.setMinimumSize(room.getSize());
-		frame.pack();
-		Table myTable = new Table(100, 60, 20, 40);
-		Table table2 = new Table(200, 20, 50, 160);
-		Chair myChair = new Chair(30, 200, 30);
-		room.addFurniture(myTable);
-		room.addFurniture(table2);
-		room.addFurniture(myChair);
-		
-		frame.add(room);
-		frame.setVisible(true);
+		conferenceRoom();
 		
 	}
+	
+	public static void conferenceRoom() {
+		JFrame frame = new JFrame("Conference Room");
+		JPanel panel = new JPanel();
+		Room room = new Room(1000, 1000);
+		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+		frame.add(room);
+		
+		frame.setSize(1100, 1100);
+		frame.setVisible(true);
+		//table: 200x50
+		//chair: 40x40
+		//defining goals
+		
+		ArrayList<Location> tableGoals = new ArrayList<Location>();
+		tableGoals.add(new Location(185,125));
+		tableGoals.add(new Location(395,125));
+		tableGoals.add(new Location(605,125));
+		tableGoals.add(new Location(815,125));
+//		tableGoals.add(new Location(185,875));
+//		tableGoals.add(new Location(395,875));
+//		tableGoals.add(new Location(605,875));
+//		tableGoals.add(new Location(815,875));
+		
+		ArrayList<Location> chairGoals = new ArrayList<Location>();
+		chairGoals.add(new Location(135,50));
+		chairGoals.add(new Location(235,50));
+		chairGoals.add(new Location(345,50));
+		chairGoals.add(new Location(445,50));
+		chairGoals.add(new Location(555,50));
+		chairGoals.add(new Location(655,50));
+		chairGoals.add(new Location(765,50));
+		chairGoals.add(new Location(865,50));
+//		chairGoals.add(new Location(135,950));
+//		chairGoals.add(new Location(235,950));
+//		chairGoals.add(new Location(345,950));
+//		chairGoals.add(new Location(445,950));
+//		chairGoals.add(new Location(555,950));
+//		chairGoals.add(new Location(655,950));
+//		chairGoals.add(new Location(765,950));
+//		chairGoals.add(new Location(865,950));
+		
+		//randomly place furniture
+		
+		for(int i = 0; i < 4; i++) {
+			Location location = tableGoals.get(i);
+			Goal goal = new Goal(location);
+			room.randomlyAddTable(200, 50, goal);
+		}
+		for(int i = 0; i < 8; i++) {
+			Location location = chairGoals.get(i);
+			Goal goal = new Goal(location);
+			room.randomlyAddChair(40, goal);
+		}
+//		Location loc1 = new Location(20,40);
+//		Location loc2 = new Location(200,40);
+//		Location loc3= new Location(50,200);
+//		Table myTable = new Table(100, 100, loc1);
+//		Table table2 = new Table(200, 20, loc2);
+//		Chair myChair = new Chair(30, loc3);
+//		room.addObject(myTable);
+//		room.addObject(table2);
+//		room.addObject(myChair);
+		
+		
+	}
+
 }
