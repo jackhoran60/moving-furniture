@@ -20,7 +20,7 @@ public class Room extends JPanel {
 	private int height;
 	private final Color CHAIR_COLOR = new Color(150,75,0);
 	private final Color TABLE_COLOR = new Color(53,101,77);
-	private final int UPDATE_INTERVAL = 40;
+	private final int UPDATE_INTERVAL = 20;
 	private boolean hitConferenceRoomPos = false;
 	private boolean chairsInPos = false;
 	private ArrayList<MovingObject> objects = new ArrayList<MovingObject>();
@@ -163,8 +163,8 @@ public class Room extends JPanel {
 				if(m instanceof Chair) {
 					if(m.getX() + (m.getWidth()) < width - 1) {
 						if(!m.moveRight(this)) {
-							if(!m.moveDown(this)) {
-								m.moveUp(this);
+							if(!m.moveUp(this)) {
+								m.moveDown(this);
 							}
 						}
 					}
@@ -172,8 +172,8 @@ public class Room extends JPanel {
 				else {
 					if(m.getX() - (m.getWidth()/2) > 0) {
 						if(!m.moveLeft(this)) {
-							if(!m.moveUp(this)) {
-								m.moveDown(this);
+							if(!m.moveDown(this)) {
+								m.moveUp(this);
 							}
 						}
 					}
