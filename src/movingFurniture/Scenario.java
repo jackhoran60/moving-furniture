@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class Scenario {
-	//a scenario is basically a consistent way
+	//a scenario is basically how we'll handle moving objects virtually
 	private int defaultScenarioNum;
 	private int width;
 	private int height;
@@ -13,6 +13,7 @@ public class Scenario {
 	private String description;
 	
 	public Scenario(int width, int height, LinkedHashMap<Integer, MovingFObject> initPos, String description) {
+		defaultScenarioNum = -1;
 		spacetime = new ArrayList<LinkedHashMap>();
 		spacetime.add(initPos);
 		this.width = width;
@@ -45,16 +46,16 @@ public class Scenario {
 		height = 1000;
 		Start t0s = new Start(200,500);
 		Goal t0g = new Goal(800,500);
-		Start t1s = new Start(800,500);
-		Goal t1g = new Goal(200,500);
+		Start c0s = new Start(800,500);
+		Goal c0g = new Goal(200,500);
 		Table t0 = new Table(50,t0s,t0g);
-		Table t1 = new Table(50,t1s,t1g);
+		Chair c0 = new Chair(50,c0s,c0g);
 		initPos= new LinkedHashMap<Integer, MovingFObject>();
 		initPos.put(0, t0);
-		initPos.put(1, t1);
+		initPos.put(1, c0);
 		spacetime = new ArrayList<LinkedHashMap>();
 		spacetime.add(initPos);
-		description = "Two tables must swap start and goal positions.";
+		description = "A table and chair must swap start and goal positions.";
 	}
 	public boolean checkSolution() {
 		boolean correct = true;

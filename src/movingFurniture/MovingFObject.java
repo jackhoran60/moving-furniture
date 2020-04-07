@@ -1,9 +1,13 @@
 package movingFurniture;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Shape;
 import java.util.ArrayList;
 
 public abstract class MovingFObject {
+	private Color color;
+	private String Shape;
 	private Location location;
 	private Start start;
 	private double width;
@@ -13,8 +17,32 @@ public abstract class MovingFObject {
 	public MovingFObject(double diameter, Start start, Goal goal) {
 		width = diameter;
 		length = diameter;
+		location = new Location(start.getX(), start.getY());
 		this.start = start;
 		this.goal = goal;
+		color = Color.BLACK;
+		Shape = "Rectangle";
+	}
+	public MovingFObject(double width, double length, Start start, Goal goal) {
+		this.width = width;
+		this.length = length;
+		location = new Location(start.getX(), start.getY());
+		this.start = start;
+		this.goal = goal;
+		color = Color.BLACK;
+		Shape = "Rectangle";
+	}
+	public Color getColor() {
+		return color;
+	}
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	public String getShape() {
+		return Shape;
+	}
+	public void setShape(String shape) {
+		Shape = shape;
 	}
 	public Start getStart() {
 		return start;
@@ -33,12 +61,6 @@ public abstract class MovingFObject {
 	}
 	public void setLength(double length) {
 		this.length = length;
-	}
-	public MovingFObject(double width, double length, Start start, Goal goal) {
-		this.width = width;
-		this.length = length;
-		this.start = start;
-		this.goal = goal;
 	}
 	public double getX() {
 		return location.getX();
