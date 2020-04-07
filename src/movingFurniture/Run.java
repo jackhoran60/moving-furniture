@@ -58,16 +58,16 @@ public class Run extends Canvas{
 		
 		//randomly place furniture
 		
-		for(int i = 0; i < 4; i++) {
-			Location location = tableGoals.get(i);
-			Goal goal = new Goal(location);
-			room.randomlyAddTable(200, 50, goal);
-		}
-		for(int i = 0; i < 8; i++) {
-			Location location = chairGoals.get(i);
-			Goal goal = new Goal(location);
-			room.randomlyAddChair(40, goal);
-		}
+//		for(int i = 0; i < 4; i++) {
+//			Location location = tableGoals.get(i);
+//			Goal goal = new Goal(location);
+//			room.randomlyAddTable(200, 50, goal);
+//		}
+//		for(int i = 0; i < 8; i++) {
+//			Location location = chairGoals.get(i);
+//			Goal goal = new Goal(location);
+//			room.randomlyAddChair(40, goal);
+//		}
 //		Location loc1 = new Location(20,40);
 //		Location loc2 = new Location(200,40);
 //		Location loc3= new Location(50,200);
