@@ -3,6 +3,7 @@ package movingFurniture;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 
@@ -11,16 +12,16 @@ public class ScenarioView {
 	private int frametime;
 	private int width;
 	private int height;
-	private ArrayList<LinkedHashMap> spacetime;
+	private ArrayList<Map<Integer, MovingFObject>> spacetime;
 	
-	public ScenarioView(String name, int width, int height, ArrayList<LinkedHashMap> spacetime) {
+	public ScenarioView(String name, int width, int height, ArrayList<Map<Integer, MovingFObject>> spacetime) {
 		this.frametime = 20;
 		this.name = name;
 		this.width = width;
 		this.height = height;
 		this.spacetime = spacetime;
 	}
-	public ScenarioView(String name, int width, int height, ArrayList<LinkedHashMap> spacetime, int frametime) {
+	public ScenarioView(String name, int width, int height, ArrayList<Map<Integer, MovingFObject>> spacetime, int frametime) {
 		this.frametime = frametime;
 		this.name = name;
 		this.width = width;
@@ -43,8 +44,9 @@ public class ScenarioView {
 	private void animate(ScenarioJPanel sjp) throws InterruptedException {
 		sjp.drawFrame(spacetime.get(0));
 		Thread.sleep(frametime * 50);
-		for(LinkedHashMap frame : spacetime) {
-			sjp.drawFrame(frame);
+		for(int i = 0; i < spacetime.size(); i++) {
+			sjp.drawFrame(spacetime.get(i));
+			//System.out.println(i);
 			Thread.sleep(frametime);
 		}
 	}
@@ -52,8 +54,8 @@ public class ScenarioView {
 		while(true) {
 			sjp.drawFrame(spacetime.get(0));
 			Thread.sleep(frametime * 50);
-			for(LinkedHashMap frame : spacetime) {
-				sjp.drawFrame(frame);
+			for(int i = 0; i < spacetime.size(); i++) {
+				sjp.drawFrame(spacetime.get(i));
 				Thread.sleep(frametime);
 			}
 			Thread.sleep(frametime * 50);
@@ -78,10 +80,10 @@ public class ScenarioView {
 	public void setHeight(int height) {
 		this.height = height;
 	}
-	public ArrayList<LinkedHashMap> getSpacetime() {
+	public ArrayList<Map<Integer, MovingFObject>> getSpacetime() {
 		return spacetime;
 	}
-	public void setSpacetime(ArrayList<LinkedHashMap> spacetime) {
+	public void setSpacetime(ArrayList<Map<Integer, MovingFObject>> spacetime) {
 		this.spacetime = spacetime;
 	}
 	

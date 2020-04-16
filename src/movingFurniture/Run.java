@@ -13,9 +13,7 @@ import javax.swing.*;
 public class Run extends Canvas{
 	public static void main(String[] args) throws InterruptedException {
 //		conferenceRoom();
-		Scenario scen = new Scenario(1);
-		ScenarioView scenView = new ScenarioView("Sample scen", scen.getWidth(), scen.getHeight(),scen.getSpaceTime());
-		scenView.animate();
+		MovingProgramming.generateScenario(1);
 	}
 	
 //	public static void conferenceRoom() {

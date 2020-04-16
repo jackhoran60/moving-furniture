@@ -1,66 +1,69 @@
 package movingFurniture;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Scenario {
 	//a scenario is basically how we'll handle moving objects virtually
 	private int defaultScenarioNum;
 	private int width;
 	private int height;
-	private ArrayList<LinkedHashMap> spacetime;
-	private LinkedHashMap<Integer, MovingFObject> initPos;
+	private ArrayList<Map<Integer, MovingFObject>> spacetime;
+	private Map<Integer, MovingFObject> initPos;
 	private String description;
+	private double maxVelocity;
 	
-	public Scenario(int width, int height, LinkedHashMap<Integer, MovingFObject> initPos, String description) {
+	public Scenario(int width, int height, Map<Integer, MovingFObject> initPos, String description) {
 		defaultScenarioNum = -1;
-		spacetime = new ArrayList<LinkedHashMap>();
+		spacetime = new ArrayList<Map<Integer, MovingFObject>>();
 		spacetime.add(initPos);
 		this.width = width;
 		this.height = height;
 		this.initPos = initPos;
 		this.description = description;
+		this.maxVelocity = 1;
 	}
-	public Scenario(int defaultScenarioNum) {
-		//default scenarios so users can easily replicate various solutions
-		if(defaultScenarioNum == 0) 
-			scenario0();
-		else if(defaultScenarioNum == 1) 
-			scenario1();
-			
+	public double getMaxVelocity() {
+		return maxVelocity;
 	}
-	private void scenario0() {
-		width = 1000;
-		height = 1000;
-		Start t0s = new Start(200,500);
-		Goal t0g = new Goal(800,500);
-		Table t0 = new Table(50,t0s,t0g);
-		initPos= new LinkedHashMap<Integer, MovingFObject>();
-		initPos.put(0, t0);
-		spacetime = new ArrayList<LinkedHashMap>();
-		spacetime.add(initPos);
-		description = "A single table must move towards its goal.";
+	public void setMaxVelocity(double maxVelocity) {
+		this.maxVelocity = maxVelocity;
 	}
-	private void scenario1() {
-		width = 1000;
-		height = 1000;
-		Start t0s = new Start(200,500);
-		Goal t0g = new Goal(800,500);
-		Start c0s = new Start(800,500);
-		Goal c0g = new Goal(200,500);
-		Table t0 = new Table(50,t0s,t0g);
-		Chair c0 = new Chair(50,c0s,c0g);
-		initPos= new LinkedHashMap<Integer, MovingFObject>();
-		initPos.put(0, t0);
-		initPos.put(1, c0);
-		spacetime = new ArrayList<LinkedHashMap>();
-		spacetime.add(initPos);
-		description = "A table and chair must swap start and goal positions.";
+	public static Scenario gen(int s) {
+		int width = 1000;
+		int height = 1000;
+		String description = "";
+		if(s==0) {
+			Start t0s = new Start(200,500);
+			Goal t0g = new Goal(800,500);
+			Table t0 = new Table(50,t0s,t0g);
+			Map<Integer, MovingFObject> initPos= new LinkedHashMap<Integer, MovingFObject>();
+			initPos.put(0, t0);
+			description = "A single table must move towards its goal.";
+			return new Scenario(width, height, initPos, description);
+		}
+		else if(s==1) {
+			Start t0s = new Start(200,500);
+			Goal t0g = new Goal(800,500);
+			Start c0s = new Start(800,500);
+			Goal c0g = new Goal(200,500);
+			Table t0 = new Table(50,t0s,t0g);
+			Chair c0 = new Chair(50,c0s,c0g);
+			Map<Integer, MovingFObject> initPos= new LinkedHashMap<Integer, MovingFObject>();
+			initPos.put(0, t0);
+			initPos.put(1, c0);
+			description = "A table and chair must swap start and goal positions.";
+			return new Scenario(width, height, initPos, description);
+		}
+		return null;
 	}
+	
 	public boolean checkSolution() {
 		boolean correct = true;
 		int len = spacetime.size();
-		LinkedHashMap<Integer, MovingFObject> endPos = spacetime.get(len-1);
+		Map<Integer, MovingFObject> endPos = spacetime.get(len-1);
 		for(Integer I : endPos.keySet()) {
 			MovingFObject f = endPos.get(I);
 			if(f.getX() != f.getGoal().getX()) {
@@ -74,19 +77,47 @@ public class Scenario {
 		}
 		return correct;
 	}
+	public boolean frameExists(int frameNum) {
+		//returns true if frameNum exists
+		if(frameNum < spacetime.size())
+			return true;
+		return false;
+	}
+	public boolean hasNextFrame(int frameNum) {
+		//see if there's a frame past this frame
+		if(frameNum < spacetime.size() - 1) {
+			return true;
+		}
+		return false;
+	}
 	public void addFrame() {
 		int len = spacetime.size();
-		LinkedHashMap<Integer, MovingFObject> endPos = spacetime.get(len-1);
-		LinkedHashMap<Integer, MovingFObject> newEndPos = (LinkedHashMap<Integer, MovingFObject>) endPos.clone();
+		Map<Integer, MovingFObject> endPos = spacetime.get(len-1);
+		Map<Integer, MovingFObject> newEndPos = new LinkedHashMap<Integer, MovingFObject>();
+		for(int i = 0; i < endPos.size(); i++) {
+			MovingFObject newTemp = endPos.get(i);
+			newEndPos.put(i, newTemp.duplicate());
+		}
+		//TODO: THIS MIGHT CAUSE ISSUES
+		//TODO: MAKE SURE THIS IS NOT A SHALLOW COPY
 		spacetime.add(newEndPos);
 	}
-	public ArrayList<LinkedHashMap> getSpaceTime() {
+	public void addFrames(int numOfFrames) {
+		if(numOfFrames < 1)
+			return;
+		else {
+			for(int i = 0; i <= numOfFrames; i++) {
+				addFrame();
+			}
+		}
+	}
+	public ArrayList<Map<Integer, MovingFObject>> getSpaceTime() {
 		return spacetime;
 	}
 	public int getSize(){
 		return spacetime.size();
 	}
-	public LinkedHashMap<Integer, MovingFObject> getInitPos() {
+	public Map<Integer, MovingFObject> getInitPos() {
 		return initPos;
 	}
 	public void setInitPos(LinkedHashMap<Integer, MovingFObject> initPos) {

@@ -7,6 +7,10 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
 public class Table extends MovingFObject {
+	public Table(Table toDupe) {
+		super(toDupe);
+		setColor(new Color(53,101,77));
+	}
 	public Table(double width, Start start, Goal goal) {
 		super(width, width, start, goal);
 		setColor(new Color(53,101,77));
@@ -14,5 +18,9 @@ public class Table extends MovingFObject {
 	public Table(double width, double length, Start start, Goal goal) {
 		super(width, length, start, goal);
 		setColor(new Color(53,101,77));
+	}
+	public MovingFObject duplicate() {
+		Table table = new Table(this);
+		return table;
 	}
 }

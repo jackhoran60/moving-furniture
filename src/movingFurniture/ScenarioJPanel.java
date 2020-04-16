@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -14,13 +15,13 @@ import javax.swing.Timer;
 public class ScenarioJPanel extends JPanel {
 	private int width;
 	private int height;
-	LinkedHashMap<Integer, MovingFObject> frame;
+	Map<Integer, MovingFObject> frame;
 	public ScenarioJPanel(int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.setSize(width, height);
 	}
-	public void drawFrame(LinkedHashMap<Integer, MovingFObject> frame) {
+	public void drawFrame(Map<Integer, MovingFObject> frame) {
 		this.frame = frame;
 		repaint();
 	}

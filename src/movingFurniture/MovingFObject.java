@@ -13,7 +13,16 @@ public abstract class MovingFObject {
 	private double width;
 	private double length;
 	private Goal goal;
-	
+	public MovingFObject(MovingFObject toDupe) {
+		//deep copy
+		width = toDupe.getWidth();
+		length = toDupe.getLength();
+		location = new Location(toDupe.getX(), toDupe.getY());
+		start = new Start(toDupe.getStart().getX(),toDupe.getStart().getY());
+		goal = new Goal(toDupe.getGoal().getX(),toDupe.getGoal().getY());
+		color = Color.BLACK;
+		Shape = "Rectangle";
+	}
 	public MovingFObject(double diameter, Start start, Goal goal) {
 		width = diameter;
 		length = diameter;
@@ -32,6 +41,7 @@ public abstract class MovingFObject {
 		color = Color.BLACK;
 		Shape = "Rectangle";
 	}
+	public abstract MovingFObject duplicate();
 	public Color getColor() {
 		return color;
 	}
@@ -80,23 +90,57 @@ public abstract class MovingFObject {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-//	public int distanceBetweenObjects(MovingObject object) {
-//		double xDist = Math.abs(location.getX() - object.location.getX()) - (width / 2) - (object.getWidth() / 2);
-//		double yDist = Math.abs(location.getX() - object.location.getX()) - (width / 2) - (object.getWidth() / 2);
-//		int dist = (int) (Math.pow(xDist, 2) + Math.pow(yDist, 2));
-//		return dist;
-//	}
-//	public boolean isTouchingObject(MovingObject object) {
-//		if(this.equals(object))
-//			return false;
-//		double xDist = Math.abs(location.getX() - object.location.getX()) - (width / 2) - (object.getWidth() / 2);
-//		if(xDist <= 0 && Math.abs(object.location.getY() - location.getY()) < length / 2 + object.length / 2)
-//			return true;
-//		double yDist = Math.abs(location.getY() - object.location.getY()) - (length / 2) - (object.getLength() / 2);
-//		if(yDist <= 0 && Math.abs(object.location.getX() - location.getX()) < width / 2 + object.width / 2)
-//			return true;
-//		return false;
-//	}
+	public int distanceBetweenObjects(MovingFObject object) {
+		//returns the distance between this object and another in parameter
+		double xDist = Math.abs(location.getX() - object.location.getX()) - (width / 2) - (object.getWidth() / 2);
+		double yDist = Math.abs(location.getX() - object.location.getX()) - (width / 2) - (object.getWidth() / 2);
+		int dist = (int) (Math.pow(xDist, 2) + Math.pow(yDist, 2));
+		return dist;
+	}
+	public boolean isTouchingObject(MovingFObject object) {
+		//returns true if this object is touching object in parameter
+		if(this.equals(object))
+			return false;
+		double xDist = Math.abs(location.getX() - object.location.getX()) - (width / 2) - (object.getWidth() / 2);
+		if(xDist <= 0 && Math.abs(object.location.getY() - location.getY()) < length / 2 + object.length / 2)
+			return true;
+		double yDist = Math.abs(location.getY() - object.location.getY()) - (length / 2) - (object.getLength() / 2);
+		if(yDist <= 0 && Math.abs(object.location.getX() - location.getX()) < width / 2 + object.width / 2)
+			return true;
+		return false;
+	}
+	public boolean locationTouchingLocation(int locType, MovingFObject object, int objLocType) {
+		//ask professor cytron about
+		//this method checks whether a particular type of this object's location (start, current location, or goal) is touching a particular location of the other obj in parameter
+		//0 represents Start, 1 represents Location, and 2 represents Goal
+		//I want to instead pass static references to Start, Location, and Goal
+		if(this.equals(object))
+			return false;
+		
+		Location temp;
+		Location objTemp;
+		if(locType == 0)
+			temp = start;
+		else if(locType == 1)
+			temp = location;
+		else
+			temp = goal;
+		if(objLocType == 0)
+			objTemp = object.getStart();
+		else if(objLocType == 1)
+			objTemp = object.getLocation();
+		else
+			objTemp = object.getGoal();
+		
+		double xDist = Math.abs(temp.getX() - objTemp.getX()) - (width / 2) - (object.getWidth() / 2);
+		if(xDist <= 0 && Math.abs(temp.getY() - objTemp.getY()) < length / 2 + object.length / 2)
+			return true;
+		double yDist = Math.abs(temp.getY() - objTemp.getY()) - (length / 2) - (object.getLength() / 2);
+		if(yDist <= 0 && Math.abs(objTemp.getX() - temp.getX()) < width / 2 + object.width / 2)
+			return true;
+		return false;
+		
+	}
 //	public String directionToObject(MovingObject object) {
 //		//return closest direction between object
 //		//returns "Left", "Right", "Up", or "Down"
