@@ -6,25 +6,10 @@ import java.util.Map;
 public class ScenarioController {
 	public final Scenario scenario;
 	public final ScenarioView sv;
-	public final double maxVelocity;
 
-	public static void main(String[] args) throws InterruptedException {
-		ScenarioController sc = new ScenarioController();
-		while (true) {
-			for(int i = 0; i < sc.getSize(); i++) {
-				
-				Location get = sc.getLocation(i);
-				Location move = new Location(get.x+0.5,get.y+0.5);
-				System.out.println(sc.move(i, move));
-				sc.sv.repaint();
-				//System.out.println(sc.sv.initPos.get(0));
-				Thread.sleep(20);
-			}
-		}
-	}
+	
 	public ScenarioController() throws InterruptedException {
 		//this is playground scenariocontroller
-		maxVelocity = 1;
 		Start start = new Start(100, 100);
 		Goal goal = new Goal(500, 700);
 		Table table = new Table(100, 100, 1, start, goal);
@@ -32,21 +17,20 @@ public class ScenarioController {
 		table.addListener(tv);
 		Map<Integer, MovingFObject> map = new HashMap<Integer,MovingFObject>();
 		map.put(0, table);
-		scenario = new Scenario(1000,1000,1,map,"playground");
+		scenario = new Scenario(1000,1000,map,"playground");
 		Map<Integer, MovingFView> mapview = new HashMap<Integer, MovingFView>();
 		mapview.put(0,tv);
 		
 		sv = new ScenarioView("playground", 1000,1000, mapview);
 		sv.repaint();
 	}
-	public ScenarioController(int facGen, double maxVelocity) throws InterruptedException {
-		this.maxVelocity = maxVelocity;
+	public ScenarioController(int facGen) throws InterruptedException {
 		sv = new ScenarioView("",1,1,new HashMap<Integer, MovingFView>());
-		scenario = Scenario.gen(facGen, maxVelocity);
+		scenario = Scenario.gen(facGen);
 		
 	}
-	public static ScenarioController facGen(int facGen, double maxVelocity) throws InterruptedException {
-		return new ScenarioController(facGen, maxVelocity);
+	public static ScenarioController facGen(int facGen) throws InterruptedException {
+		return new ScenarioController(facGen);
 	}
 	public boolean move(int id, Location newLoc) {
 		if(id >= scenario.count())
@@ -63,18 +47,21 @@ public class ScenarioController {
 	public int getSize() {
 		return scenario.fobjects.size();
 	}
+	
 	public Location getLocation(int i) {
 		return scenario.fobjects.get(i).getLocation();
 	}
+	public Map<Integer, MovingFObject> getFObjects() {
+		return scenario.fobjects;
+	}
+	
 //	public Scenario getScenario() {
 //		return scenario;
 //	}
 //	public double getMaxVelocity() {
 //		return scenario.maxVelocity;
 //	}
-	public Map<Integer, MovingFObject> getFObjects() {
-		return scenario.fobjects;
-	}
+	
 //	public boolean moveAtVelToLoc(int id, double velocity, Location location) {
 //		//moves object with id in map id at velocity velocity to location location
 //		//returns true if velocity < maxVelocity

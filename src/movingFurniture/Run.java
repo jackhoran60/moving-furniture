@@ -12,8 +12,18 @@ import javax.swing.*;
 
 public class Run extends Canvas{
 	public static void main(String[] args) throws InterruptedException {
-//		conferenceRoom();
-		MovingProgramming.generateScenario(1);
+		ScenarioController sc = new ScenarioController();
+		while (true) {
+			for(int i = 0; i < sc.getSize(); i++) {
+				
+				Location get = sc.getLocation(i);
+				Location move = new Location(get.x+0.5,get.y+0.5);
+				System.out.println(sc.move(i, move));
+				sc.sv.repaint();
+				//System.out.println(sc.sv.initPos.get(0));
+				Thread.sleep(20);
+			}
+		}
 	}
 	
 //	public static void conferenceRoom() {
