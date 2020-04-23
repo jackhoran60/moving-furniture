@@ -6,21 +6,10 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
+// make this extend Movable
+// get rid of color and move that to visualizer
 public class Table extends MovingFObject {
-	public Table(Table toDupe) {
-		super(toDupe);
-		setColor(new Color(53,101,77));
-	}
-	public Table(double width, Start start, Goal goal) {
-		super(width, width, start, goal);
-		setColor(new Color(53,101,77));
-	}
-	public Table(double width, double length, Start start, Goal goal) {
-		super(width, length, start, goal);
-		setColor(new Color(53,101,77));
-	}
-	public MovingFObject duplicate() {
-		Table table = new Table(this);
-		return table;
+	public Table(double width, double length, double maxVelocity, Start start, Goal goal) {
+		super(width, length, maxVelocity, start, goal);
 	}
 }
