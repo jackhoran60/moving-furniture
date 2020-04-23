@@ -7,15 +7,15 @@ public class ScenarioController {
 	public final Scenario scenario;
 	public final ScenarioView sv;
 	public final double maxVelocity;
+
 	public static void main(String[] args) throws InterruptedException {
 		ScenarioController sc = new ScenarioController();
-		Map<Integer, MovingFObject> map = sc.getFObjects();
 		while (true) {
-			for(int i = 0; i < map.size(); i++) {
-				MovingFObject temp = map.get(i);
-				Location get = temp.getLocation();
+			for(int i = 0; i < sc.getSize(); i++) {
+				
+				Location get = sc.getLocation(i);
 				Location move = new Location(get.x+0.5,get.y+0.5);
-				sc.move(i, move);
+				System.out.println(sc.move(i, move));
 				sc.sv.repaint();
 				//System.out.println(sc.sv.initPos.get(0));
 				Thread.sleep(20);
@@ -59,6 +59,12 @@ public class ScenarioController {
 		}
 		return false;
 		
+	}
+	public int getSize() {
+		return scenario.fobjects.size();
+	}
+	public Location getLocation(int i) {
+		return scenario.fobjects.get(i).getLocation();
 	}
 //	public Scenario getScenario() {
 //		return scenario;

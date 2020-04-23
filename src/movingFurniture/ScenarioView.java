@@ -14,13 +14,13 @@ public class ScenarioView{
 	public final int FRAMETIME = 20;
 	public final int width;
 	public final int height;
-	public final Map<Integer, MovingFView> initPos;
+	private Map<Integer, MovingFView> views;
 	public final ScenarioJPanel sjp;
 	public ScenarioView(String name, int width, int height, Map<Integer, MovingFView> initPos) {
 		this.name = name;
 		this.width = width;
 		this.height = height;
-		this.initPos = initPos;
+		this.views = initPos;
 		JFrame frame = new JFrame(name);
 		this.sjp = new ScenarioJPanel(width, height, initPos);
 		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
@@ -30,6 +30,9 @@ public class ScenarioView{
 	}
 	public void repaint() {
 		sjp.repaint();
+	}
+	public Map<Integer, MovingFView> getViews(){
+		return views;
 	}
 	
 }
