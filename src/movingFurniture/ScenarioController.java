@@ -1,59 +1,54 @@
 package movingFurniture;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScenarioController {
 	public final Scenario scenario;
 	public final ScenarioView sv;
-
-	
-	public ScenarioController() throws InterruptedException {
-		//this is playground scenariocontroller
-		Start start = new Start(100, 100);
-		Goal goal = new Goal(500, 700);
-		Table table = new Table(100, 100, 1, start, goal);
-		TableView tv = new TableView(table.getLocation(),table.width,table.length);
-		table.addListener(tv);
-		Map<Integer, MovingFObject> map = new HashMap<Integer,MovingFObject>();
-		map.put(0, table);
-		scenario = new Scenario(1000,1000,map,"playground");
-		Map<Integer, MovingFView> mapview = new HashMap<Integer, MovingFView>();
-		mapview.put(0,tv);
-		
-		sv = new ScenarioView("playground", 1000,1000, mapview);
+	public final double stepTime; //the amount of time to take one step (in ms) (e.g. stepSize = 10 = 100 steps/second)
+	public ScenarioController(Scenario scenario, ScenarioView sv, double stepTime) {
+		this.scenario = scenario;
+		this.sv = sv;
+		this.stepTime = stepTime;
 		sv.repaint();
 	}
-	public ScenarioController(int facGen) throws InterruptedException {
-		sv = new ScenarioView("",1,1,new HashMap<Integer, MovingFView>());
-		scenario = Scenario.gen(facGen);
-		
-	}
 	public static ScenarioController facGen(int facGen) throws InterruptedException {
-		return new ScenarioController(facGen);
+		if(facGen == 0) {
+			ScenarioView sv = new ScenarioView("",1,1,new HashMap<Integer, MovingFView>());
+			double stepTime = 0.1;
+			Scenario scenario = Scenario.gen(facGen);
+			return new ScenarioController(scenario,sv,stepTime);
+		}
+		return null;
 	}
-	public boolean move(int id, Location newLoc) {
-		if(id >= scenario.count())
-			return false;
-		MovingFObject fo = scenario.fobjects.get(id);
-		if(fo.canMoveTo(newLoc)) {
-			Location oldLoc = fo.getLocation();
-			fo.move(newLoc);
+	public void step() {
+		for(int i = 0; i < scenario.fobjects.size(); i++) {
+			move(i);
+		}
+		sv.repaint();
+	}
+	public boolean setVelocity(int id, Velocity velocity) {
+		if(velocity.magnitude <= scenario.fobjects.get(id).maxVelocity.magnitude && velocity.magnitude >= 0) {
+			scenario.fobjects.get(id).setVelocity(velocity);
 			return true;
 		}
 		return false;
-		
+	}
+	private void move(int id) {
+		//should this logic go in MovingFObject itself?
+		MovingFObject fo = scenario.fobjects.get(id);
+		double distTravelled = fo.getVelocity().magnitude * stepTime / 1000;
+		double dx = Math.cos(fo.getVelocity().direction) * distTravelled;
+		double dy = Math.sin(fo.getVelocity().direction) * distTravelled;
+		Location newLoc = new Location(fo.getLocation().x + dx, fo.getLocation().y + dy);
+		fo.move(newLoc);
 	}
 	public int getSize() {
 		return scenario.fobjects.size();
 	}
 	
-	public Location getLocation(int i) {
-		return scenario.fobjects.get(i).getLocation();
-	}
-	public Map<Integer, MovingFObject> getFObjects() {
-		return scenario.fobjects;
-	}
 	
 //	public Scenario getScenario() {
 //		return scenario;

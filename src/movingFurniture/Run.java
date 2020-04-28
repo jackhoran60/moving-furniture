@@ -7,23 +7,45 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.*;
 
-public class Run extends Canvas{
+public class Run {
 	public static void main(String[] args) throws InterruptedException {
-		ScenarioController sc = new ScenarioController();
-		//TODO: eventually (true) will become (!objectsInPosition)
-		while (true) {
-			for(int i = 0; i < sc.getSize(); i++) {
-				Location get = sc.getLocation(i);
-				Location move = new Location(get.x+0.5,get.y+0.5);
-				System.out.println(sc.move(i, move));
-				sc.sv.repaint();
-				//TODO: how should I frame delay?
-				Thread.sleep(20);
-			}
-		}
+		Start start = new Start(500, 500);
+		Goal goal = new Goal(500, 700);
+		Table table = new Table(100, 100,new Velocity(0,0), new Velocity(250,0), start, goal);
+		TableView tv = new TableView(table.getLocation(),table.width,table.length);
+		table.addListener(tv);
+		Map<Integer, MovingFObject> map = new HashMap<Integer,MovingFObject>();
+		map.put(0, table);
+		Scenario scenario = new Scenario(1000,1000,map,"playground");
+		Map<Integer, MovingFView> mapview = new HashMap<Integer, MovingFView>();
+		mapview.put(0,tv);
+		
+		ScenarioView sv = new ScenarioView("playground", 1000,1000, mapview);
+		double stepTime = 1;
+		ScenarioController sc = new ScenarioController(scenario,sv,stepTime);
+		
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+		ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(2);
+		Runnable updater = new Runnable() {
+			public void run() { sc.step(); }
+		};
+		Runnable changeDirection = new Runnable() {
+			public void run() { sc.setVelocity(0, new Velocity(250, Math.random()*360)); }
+		};
+		ScheduledFuture scheduleHandle = scheduler.scheduleWithFixedDelay(updater,(long)sc.stepTime,(long)sc.stepTime,TimeUnit.MILLISECONDS);
+		ScheduledFuture scheduleHandle2 = scheduler2.scheduleWithFixedDelay(changeDirection,(long)(sc.stepTime*1000),(long)(sc.stepTime*1000),TimeUnit.MILLISECONDS);
+		
+		
 	}
 	
 //	public static void conferenceRoom() {

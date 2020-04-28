@@ -22,7 +22,7 @@ public class Scenario{
 		if(genKey==0) {
 			Start t0s = new Start(200,500);
 			Goal t0g = new Goal(800,500);
-			Table t0 = new Table(50,50, 1, t0s,t0g);
+			Table t0 = new Table(50,50, new Velocity(20,0),new Velocity(20,0), t0s,t0g);
 			Map<Integer, MovingFObject> initPos = new LinkedHashMap<Integer, MovingFObject>();
 			initPos.put(0, t0);
 			description = "A single table must move towards its goal.";
@@ -33,8 +33,8 @@ public class Scenario{
 			Goal t0g = new Goal(800,500);
 			Start c0s = new Start(800,500);
 			Goal c0g = new Goal(200,500);
-			Table t0 = new Table(50,50,1,t0s,t0g);
-			Chair c0 = new Chair(50,1,c0s,c0g);
+			Table t0 = new Table(50,50,new Velocity(20,0),new Velocity(20,0),t0s,t0g);
+			Chair c0 = new Chair(50,new Velocity(20,0),new Velocity(20,0),c0s,c0g);
 			Map<Integer, MovingFObject> initPos= new LinkedHashMap<Integer, MovingFObject>();
 			initPos.put(0, t0);
 			initPos.put(1, c0);

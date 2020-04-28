@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 // make this extend Movable
 // get rid of color and move that to visualizer
 public class Table extends MovingFObject {
-	public Table(double width, double length, double maxVelocity, Start start, Goal goal) {
-		super(width, length, maxVelocity, start, goal);
+	public Table(double width, double length, Velocity initVelocity, Velocity maxVelocity, Start start, Goal goal) {
+		super(width, length, initVelocity, maxVelocity, start, goal);
 	}
 }

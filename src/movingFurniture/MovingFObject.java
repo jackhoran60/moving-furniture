@@ -4,22 +4,19 @@ public abstract class MovingFObject extends Movable {
 	public final Start start;
 	public final double width;
 	public final double length;
-	public final double maxVelocity;
+	private Velocity velocity;
+	public final Velocity maxVelocity;
 	public final Goal goal;
-	public MovingFObject(double width, double length, double maxVelocity, Start start, Goal goal) {
+	public MovingFObject(double width, double length, Velocity initVel, Velocity maxVelocity, Start start, Goal goal) {
 		super(start);
 		this.width = width;
 		this.length = length;
 		this.maxVelocity = maxVelocity;
 		this.start = start;
 		this.goal = goal;
-
+		this.velocity = initVel;
 	}
 	
-	public boolean canMoveTo(Location newLoc) {
-		return getLocation().distanceTo(newLoc) <= maxVelocity;
-			
-	}
 	public int distanceToObject(MovingFObject object) {
 		//returns the distance between this object and another in parameter
 		double xDist = Math.abs(getLocation().x - object.getLocation().x) - (width / 2) - (object.width / 2);
@@ -66,6 +63,12 @@ public abstract class MovingFObject extends Movable {
 			return true;
 		return false;
 		
+	}
+	public Velocity getVelocity() {
+		return velocity;
+	}
+	public void setVelocity(Velocity velocity) {
+		this.velocity = velocity;
 	}
 //	public String directionToObject(MovingObject object) {
 //		//return closest direction between object

@@ -28,7 +28,6 @@ public class ScenarioJPanel extends JPanel {
 		for(Integer i : objviews.keySet()) {
 			MovingFView temp = objviews.get(i);
 			g2.setColor(temp.getColor());
-			System.out.println(temp.getShape());
 			g2.fill(temp.getShape());
 		}
 		//TODO
