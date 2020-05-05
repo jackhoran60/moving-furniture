@@ -23,9 +23,11 @@ public class ScenarioView{
 		this.views = initPos;
 		JFrame frame = new JFrame(name);
 		this.sjp = new ScenarioJPanel(width, height, initPos);
-		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(sjp);
-		frame.setSize(width+100, height+100);
+		frame.setSize(width, height);
+		frame.setResizable(false);
+		frame.pack();
 		frame.setVisible(true);
 	}
 	public void repaint() {

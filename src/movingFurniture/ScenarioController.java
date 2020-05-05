@@ -1,8 +1,11 @@
 package movingFurniture;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class ScenarioController {
 	public final Scenario scenario;
@@ -21,13 +24,41 @@ public class ScenarioController {
 			Scenario scenario = Scenario.gen(facGen);
 			return new ScenarioController(scenario,sv,stepTime);
 		}
+		if(facGen == 1) {
+			Start start = new Start(300, 300);
+			Start start2 = new Start(500, 500);
+			Goal goal = new Goal(500, 700);
+			Table table = new Table(100, 100,new Velocity(100,1), new Velocity(250,0), start, goal);
+			Table table2 = new Table(100, 100,new Velocity(100,Math.PI + 0.4), new Velocity(250,0), start2, goal);
+			TableView tv = new TableView(table.getLocation(),table.width,table.length);
+			TableView tv2 = new TableView(table2.getLocation(),table2.width,table2.length);
+			table.addListener(tv);
+			table2.addListener(tv2);
+			Map<Integer, MovingFObject> map = new HashMap<Integer,MovingFObject>();
+			map.put(0, table);
+			map.put(1, table2);
+			Scenario scenario = new Scenario(800,800,map,"playground");
+			Map<Integer, MovingFView> mapview = new HashMap<Integer, MovingFView>();
+			mapview.put(0,tv);
+			mapview.put(1, tv2);
+			ScenarioView sv = new ScenarioView("playground", 800,800, mapview);
+			double stepTime = 10;
+			ScenarioController sc = new ScenarioController(scenario,sv,stepTime);
+			ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+			ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(2);
+			Runnable updater = new Runnable() {
+				public void run() { sc.step();
+									sv.repaint(); }
+			};
+			ScheduledFuture scheduleHandle = scheduler.scheduleWithFixedDelay(updater,(long)sc.stepTime,(long)sc.stepTime,TimeUnit.MILLISECONDS);
+			return sc;
+		}
 		return null;
 	}
 	public void step() {
 		for(int i = 0; i < scenario.fobjects.size(); i++) {
 			move(i);
 		}
-		sv.repaint();
 	}
 	public boolean setVelocity(int id, Velocity velocity) {
 		if(velocity.magnitude <= scenario.fobjects.get(id).maxVelocity.magnitude && velocity.magnitude >= 0) {
@@ -37,158 +68,63 @@ public class ScenarioController {
 		return false;
 	}
 	private void move(int id) {
-		//should this logic go in MovingFObject itself?
+		//moves an object according to its velocity
 		MovingFObject fo = scenario.fobjects.get(id);
 		double distTravelled = fo.getVelocity().magnitude * stepTime / 1000;
 		double dx = Math.cos(fo.getVelocity().direction) * distTravelled;
 		double dy = Math.sin(fo.getVelocity().direction) * distTravelled;
+		
 		Location newLoc = new Location(fo.getLocation().x + dx, fo.getLocation().y + dy);
 		fo.move(newLoc);
+		
+		fixWallColl(id);
+		fixObjColl(id);
+	}
+	private void fixWallColl(int id) {
+		//if an object collides with a wall while moving, this method will prevent overlap
+		MovingFObject fo = scenario.fobjects.get(id);
+		if(Collision.touchingWall(fo, scenario.width, scenario.height)) {
+			double newX = fo.getLocation().x;
+			double newY = fo.getLocation().y;
+			if(Collision.getWallDist(fo, 0, scenario.width, scenario.height) < 0) {
+				newX += Collision.getWallDist(fo, 0, scenario.width, scenario.height);
+			}
+			if(Collision.getWallDist(fo, 1, scenario.width, scenario.height) < 0) {
+				newY += Collision.getWallDist(fo, 1, scenario.width, scenario.height);
+			}
+			if(Collision.getWallDist(fo, 2, scenario.width, scenario.height) < 0) {
+				newX -= Collision.getWallDist(fo, 2, scenario.width, scenario.height);
+			}
+			if(Collision.getWallDist(fo, 3, scenario.width, scenario.height) < 0) {
+				newY -= Collision.getWallDist(fo, 3, scenario.width, scenario.height);
+			}
+			fo.move(new Location(newX,newY));
+		}
+	}
+	private void fixObjColl(int id) {
+		//if an object collides with another object while moving, this method will prevent overlap
+		MovingFObject fo = scenario.fobjects.get(id);
+		for(int i = 0; i < scenario.fobjects.size(); i++) {
+			if(Collision.touching(fo, scenario.fobjects.get(i))) {
+				
+				double xback = Collision.getXDist(fo, scenario.fobjects.get(i));
+				
+				double yback = Collision.getYDist(fo, scenario.fobjects.get(i));
+				double newX = fo.getLocation().x;
+				double newY = fo.getLocation().y;
+				if(xback > yback) {
+					newX = (fo.getLocation().x < scenario.fobjects.get(i).getLocation().x) ? newX + xback : newX - xback;
+				}
+				else {
+					newY = (fo.getLocation().y < scenario.fobjects.get(i).getLocation().y) ? newY + yback : newY - yback;
+				}
+				
+				fo.move(new Location(newX,newY));
+				
+			}
+		}
 	}
 	public int getSize() {
 		return scenario.fobjects.size();
 	}
-	
-	
-//	public Scenario getScenario() {
-//		return scenario;
-//	}
-//	public double getMaxVelocity() {
-//		return scenario.maxVelocity;
-//	}
-	
-//	public boolean moveAtVelToLoc(int id, double velocity, Location location) {
-//		//moves object with id in map id at velocity velocity to location location
-//		//returns true if velocity < maxVelocity
-//		if(velocity > scenario.maxVelocity)
-//			return false;
-//		MovingFObject t = (MovingFObject) scenario.getSpaceTime().get(0).get(id);
-//		double deltaX = location.getX() - t.getX();
-//		double deltaY = location.getY() - t.getY();
-//		if(deltaX == 0 && deltaY == 0)
-//			return true;
-//		int frameNum = 0;
-//		boolean xInPos = false;
-//		boolean yInPos = false;
-//		while (!xInPos || !yInPos) {
-//			if(!scenario.hasNextFrame(frameNum)) {
-//				scenario.addFrame();
-//			}
-//			frameNum++;
-//			MovingFObject temp = (MovingFObject) scenario.getSpaceTime().get(frameNum).get(id);
-//			double sum = Math.abs(deltaX) + Math.abs(deltaY);
-//			double moveX = velocity * deltaX / sum;
-//			double moveY = velocity * deltaY / sum;
-//			if(Math.abs(deltaX) <= Math.abs(moveX)) {
-//				temp.setX(location.getX());
-//				xInPos = true;
-//			}
-//			else {
-//				temp.setX(moveX + temp.getX());
-//			}
-//			if(Math.abs(deltaY) <= Math.abs(moveY)) {
-//				temp.setY(location.getY());
-//				yInPos = true;
-//			}
-//			else {
-//				temp.setY(moveY + temp.getY());
-//			}
-//			deltaY = location.getY() - temp.getY();
-//			deltaX = location.getX() - temp.getX();
-//		}
-//		return true;
-//	}
-//	public boolean moveAtVelAtTimeToLoc(int id, double velocity, int firstFrameNum, Location location) {
-//		//moves object with id in map at velocity to location starting at frame firstFrameNum
-//		//returns true if velocity < maxVelocity
-//		if(velocity > scenario.getMaxVelocity())
-//			return false;
-//		MovingFObject t = (MovingFObject) scenario.getSpaceTime().get(firstFrameNum).get(id);
-//		double deltaX = location.getX() - t.getX();
-//		double deltaY = location.getY() - t.getY();
-//		if(deltaX == 0 && deltaY == 0)
-//			return true;
-//		int frameNum = firstFrameNum;
-//		boolean xInPos = false;
-//		boolean yInPos = false;
-//		Location tempLoc = t.getLocation();
-//		while (!xInPos || !yInPos) {
-//			if(!scenario.hasNextFrame(frameNum)) {
-//				scenario.addFrame();
-//			}
-//			frameNum++;
-//			MovingFObject temp = (MovingFObject) scenario.getSpaceTime().get(frameNum).get(id);
-//			temp.setLocation(new Location(tempLoc.getX(),tempLoc.getY()));
-//			tempLoc = temp.getLocation();
-//			double sum = Math.abs(deltaX) + Math.abs(deltaY);
-//			double moveX = velocity * deltaX / sum;
-//			double moveY = velocity * deltaY / sum;
-//			System.out.println(temp.getX());
-//			if(Math.abs(deltaX) <= Math.abs(moveX)) {
-//				temp.setX(location.getX());
-//				xInPos = true;
-//			}
-//			else {
-//				temp.setX(moveX + temp.getX());
-//				if(id==1) {
-//					System.out.println(temp.getX());
-//				}
-//			}
-//			if(Math.abs(deltaY) <= Math.abs(moveY)) {
-//				temp.setY(location.getY());
-//				yInPos = true;
-//			}
-//			else {
-//				temp.setY(moveY + temp.getY());
-//			}
-//			deltaY = location.getY() - temp.getY();
-//			deltaX = location.getX() - temp.getX();
-//		}
-//		return true;
-//	}
-//
-//	public ArrayList<Location> traceLinearMotion(int id, double velocity, Location location){
-//		//this method returns an arraylist of all the locations the object will take moving to location in parameter
-//		//the index in the arraylist represents the frame the obj will be in a given location (assuming it begins at frame 0)
-//		if(velocity > scenario.getMaxVelocity())
-//			return null;
-//		MovingFObject t = (MovingFObject) scenario.getSpaceTime().get(0).get(id);
-//		Location tl = t.getLocation();
-//		double deltaX = location.getX() - tl.getX();
-//		double deltaY = location.getY() - tl.getY();
-//		if(deltaX == 0 && deltaY == 0)
-//			return null;
-//		boolean xInPos = false;
-//		boolean yInPos = false;
-//		ArrayList<Location> trace = new ArrayList<Location>();
-//		trace.add(tl);
-//		
-//		while (!xInPos || !yInPos) {
-//
-////			Location nextLoc = new Location(tl.getX(),tl.getY());
-////			tl = temp.getLocation();
-//			double sum = Math.abs(deltaX) + Math.abs(deltaY);
-//			double moveX = velocity * deltaX / sum;
-//			double moveY = velocity * deltaY / sum;
-//			Location newloc = new Location(trace.get(trace.size()-1).getX(),trace.get(trace.size()-1).getY());
-//			if(Math.abs(deltaX) <= Math.abs(moveX)) {
-//				newloc.setX(location.getX());
-//				xInPos = true;
-//			}
-//			else {
-//				newloc.setX(newloc.getX() + moveX);
-//			}
-//			if(Math.abs(deltaY) <= Math.abs(moveY)) {
-//				newloc.setY(location.getY());
-//				yInPos = true;
-//			}
-//			else {
-//				newloc.setY(newloc.getY() + moveY);
-//			}
-//			trace.add(newloc);
-//			deltaY = location.getY() - newloc.getY();
-//			deltaX = location.getX() - newloc.getX();
-//		}
-//		return trace;
-//	}
 }

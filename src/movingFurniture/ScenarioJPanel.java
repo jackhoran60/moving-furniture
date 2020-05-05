@@ -1,7 +1,9 @@
 package movingFurniture;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
@@ -21,6 +23,9 @@ public class ScenarioJPanel extends JPanel {
 		this.height = height;
 		this.objviews = objviews;
 		this.setSize(width, height);
+		this.setPreferredSize(new Dimension(width, height));
+		this.setLayout(new GridLayout());
+		
 	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -30,6 +35,5 @@ public class ScenarioJPanel extends JPanel {
 			g2.setColor(temp.getColor());
 			g2.fill(temp.getShape());
 		}
-		//TODO
 	}
 }

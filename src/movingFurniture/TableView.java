@@ -29,8 +29,7 @@ public class TableView extends MovingFView implements Viewable{
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		Location newLoc = (Location) evt.getNewValue();
-		
-		this.shape = new Rectangle2D.Double(newLoc.x - (w/2), newLoc.y - (h/2),w,h);
+		this.shape = new Rectangle2D.Double(newLoc.x, newLoc.y,w,h);
 	}
 	
 	

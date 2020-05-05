@@ -15,7 +15,6 @@ public class Scenario{
 		this.description = description;
 	}
 	public static Scenario gen(int genKey) {
-		//TODO: move facGen to controller
 		int width = 1000;
 		int height = 1000;
 		String description = "";

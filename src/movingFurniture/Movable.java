@@ -14,9 +14,6 @@ public class Movable {
 	public Movable() {
 		this(new Location(0,0));
 	}
-	public Location getLocation() {
-		return location;
-	}
 	public Movable(Location init) {
 		this.location = init;
 		this.pcs = new PropertyChangeSupport(this);
@@ -31,7 +28,9 @@ public class Movable {
 		this.location = newloc;
 		this.pcs.firePropertyChange("location", old, newloc);
 	}
-	
+	public Location getLocation() {
+		return this.location;
+	}
 	// playing around, need to move to testing
 	
 
