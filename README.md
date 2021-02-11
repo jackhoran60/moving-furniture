@@ -6,9 +6,12 @@ Given a room is arranged in a certain way, and we would like to move the furnitu
 
 Some classic attempts at solving this problem:
 
-On Moving Multiple Objects: https://link.springer.com/article/10.1007/BF01840371
-Planning Algorithms: http://lavalle.pl/planning/
-Cooperative Mobile Robotics: https://link.springer.com/chapter/10.1007/978-1-4757-6451-2_1
+On Moving Multiple Objects: https://link.springer.com/article/10.1007/BF01840371   
+
+Planning Algorithms: http://lavalle.pl/planning/    
+
+Cooperative Mobile Robotics: https://link.springer.com/chapter/10.1007/978-1-4757-6451-2_1   
+
 
 A faculty member mentioned to me that he wanted to implement this for-real in a room by attaching wheels and motors to all of the furniture. But first, we had to solve the problem!
 
